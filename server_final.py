@@ -17,11 +17,11 @@ ISN         = 5000
 nbr_of_pct  = 10000
 
 initial_cwnd = 1.0
-initial_ssthresh = 1
-max_cwnd = 1
+initial_ssthresh = 64
+max_cwnd = 100
 timeout = 2.0
 duplicate_ack_threshold = 3
-LOSS_RATE = 0.00
+LOSS_RATE = 0.005
 
 pct_zero = {'seq': 0, 
             'ack': 0, 
@@ -558,3 +558,4 @@ if __name__ == "__main__":
     # Plota os gráficos
     print("\n Gerando gráficos de análise...")
     plot_transmission_graphs(cwnd_data, throughput_data, retrans_data, stats)
+
