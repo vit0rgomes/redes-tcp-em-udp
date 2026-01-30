@@ -17,11 +17,11 @@ ISN         = 5000
 nbr_of_pct  = 10000
 
 initial_cwnd = 1.0
-initial_ssthresh = 64
-max_cwnd = 100
+initial_ssthresh = 1
+max_cwnd = 1
 timeout = 2.0
 duplicate_ack_threshold = 3
-LOSS_RATE = 0.005
+LOSS_RATE = 0.00
 
 pct_zero = {'seq': 0, 
             'ack': 0, 
@@ -115,12 +115,6 @@ def get_window_size(cwnd, rwnd):
     return min(cwnd, rwnd)
 
 def handle_new_ack(cwnd, ssthresh, num_packets, in_fast_recovery):
-    """
-    CORRIGIDO: Agora implementa corretamente o comportamento de dobrar no Slow Start
-    
-    - Slow Start: aumenta cwnd em 1 para CADA pacote confirmado → janela DOBRA a cada RTT
-    - Congestion Avoidance: aumenta cwnd em 1/cwnd para cada pacote → cresce linearmente
-    """
     if in_fast_recovery:
         # Sai do Fast Recovery para Congestion Avoidance
         new_cwnd = ssthresh
@@ -196,7 +190,7 @@ def send_messages(sock, addr, start_seq, total_msgs):
     print(f"\n{'='*70}")
     print(f"INICIANDO TRANSMISSÃO - CWND inicial: {cwnd}, SSThresh: {ssthresh}")
     print(f"{'='*70}")
-    print(f"⚡ NO SLOW START: CWND DOBRA A CADA RTT (1→2→4→8...)")
+    print(f" NO SLOW START: CWND DOBRA A CADA RTT (1→2→4→8...)")
     print(f"{'='*70}\n")
     
     round_num = 0
@@ -325,7 +319,7 @@ def send_messages(sock, addr, start_seq, total_msgs):
     efficiency = (total_msgs / total_sent * 100) if total_sent > 0 else 0
 
     print(f"\n{'='*70}")
-    print(f"✅ TRANSMISSÃO COMPLETA!")
+    print(f" TRANSMISSÃO COMPLETA!")
     print(f"{'='*70}")
     print(f"Mensagens únicas: {total_msgs}")
     print(f"Total enviado: {total_sent}")
@@ -396,13 +390,6 @@ def plot_transmission_graphs(cwnd_data, throughput_data, retrans_data, stats,
                              initial_ssthresh=16,
                              loss_rate=0.0,
                              timeout=1.0):
-    """
-    Plota 3 gráficos:
-    1) Evolução do CWND e SSThresh
-    2) CWND em escala logarítmica
-    3) Painel de estatísticas da transmissão TCP
-    """
-
     import matplotlib.pyplot as plt
     import numpy as np
 
